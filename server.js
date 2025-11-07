@@ -8,6 +8,9 @@ import eventImageRoutes from "./routes/eventImageRoutes.js";
 import donationRoutes from "./routes/donationRoutes.js";
 import expenseRoutes from "./routes/expenseRoutes.js";
 import joinRequestRoutes from "./routes/joinRequestRoutes.js";
+import mandapamRoutes from "./routes/mandapamRoutes.js"; // path as needed
+import roleRoutes from "./routes/roleRoutes.js";
+
 
 dotenv.config();
 const app = express();
@@ -15,9 +18,9 @@ const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json({ limit: "20mb" }));
-
+app.use("/api/roles", roleRoutes);
 app.get("/", (_req, res) => res.send("Ganesh Mandapam API running"));
-
+app.use("/api/mandapam", mandapamRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/event-images", eventImageRoutes);
