@@ -1,21 +1,19 @@
 import express from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import { allowRoles } from "../middleware/roleGuard.js";
-import {
-  getMandapamQR,
-  createMandapamQR,
-  updateMandapamQR,
-} from "../controllers/mandapamqrcontroller.js";
+import { getMandapamQR, updateMandapamQR } from "../controllers/mandapamqrController.js";
 
 const router = express.Router();
 
-// ✅ Fetch QR for a Mandapam
+// view QR → any logged in user
 router.get("/:mandapam_id", verifyToken, getMandapamQR);
 
-// ✅ Create QR (President / Treasurer)
-router.post("/", verifyToken, allowRoles("President", "Treasurer"), createMandapamQR);
-
-// ✅ Update QR (President / Treasurer)
-router.put("/", verifyToken, allowRoles("President", "Treasurer"), updateMandapamQR);
+// update QR → only president / treasurer
+router.put(
+  "/:mandapam_id",
+  verifyToken,
+  allowRoles("President", "Treasurer"),
+  updateMandapamQR
+);
 
 export default router;

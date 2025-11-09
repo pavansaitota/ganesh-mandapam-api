@@ -10,6 +10,10 @@ import expenseRoutes from "./routes/expenseRoutes.js";
 import joinRequestRoutes from "./routes/joinRequestRoutes.js";
 import mandapamRoutes from "./routes/mandapamRoutes.js"; // path as needed
 import roleRoutes from "./routes/roleRoutes.js";
+import mandapamqrRoutes from "./routes/mandapamqrRoutes.js";
+import userProfileRoutes from "./routes/userProfileRoutes.js";
+
+
 
 
 dotenv.config();
@@ -27,5 +31,8 @@ app.use("/api/event-images", eventImageRoutes);
 app.use("/api/donations", donationRoutes);
 app.use("/api/expenses", expenseRoutes);
 app.use("/api/join-requests", joinRequestRoutes);
+app.use("/api/mandapamqr", mandapamqrRoutes);
+app.use("/api/user", userProfileRoutes);
+
 
 app.listen(PORT, () => console.log(`✅ API listening on ${PORT}`));
