@@ -1,7 +1,8 @@
 import express from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import { allowRoles } from "../middleware/roleGuard.js";
-import { getMandapamQR, updateMandapamQR } from "../controllers/mandapamqrController.js";
+import { getMandapamQR, updateMandapamQR } from "../ganesh-mandapam-api-1/controllers/mandapamqrController.js";
+
 
 const router = express.Router();
 
