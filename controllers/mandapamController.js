@@ -11,7 +11,6 @@ export const registerMandapam = async (req, res) => {
       address = null,
       latitude = null,
       longitude = null,
-      contact_name = null,
       mobile_no = null,
       email = null,
     } = req.body;
@@ -24,9 +23,9 @@ export const registerMandapam = async (req, res) => {
     // ✅ Insert new mandapam record
     const [result] = await db.query(
       `INSERT INTO mandapam
-       (mandapam_name, address, latitude, longitude, contact_name, mobile_no, email)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [mandapam_name, address, latitude, longitude, contact_name, mobile_no, email]
+       (mandapam_name, address, latitude, longitude, contact_number, email)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [mandapam_name, address, latitude, longitude, mobile_no, email]
     );
 
     console.log("✅ Mandapam created with ID:", result.insertId);
@@ -59,8 +58,7 @@ export const getNearbyMandapams = async (req, res) => {
             address,
             latitude,
             longitude,
-            contact_name,
-            mobile_no,
+            contact_number,
             email
          FROM mandapam
          WHERE mandapam_id = ?`,
