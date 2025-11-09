@@ -9,6 +9,7 @@ export const addDonation = async (req, res) => {
     event_id = null,
     donor_user_id = null,
     donor_name = null,
+    donor_mobile = null,
     amount,
     payment_mode,
     transaction_ref = null,
@@ -23,20 +24,28 @@ export const addDonation = async (req, res) => {
       });
     }
 
+    // ✅ if cash → the person who collects cash is receiver
+    // ✅ if online → no receiver
+    const receivedByUserId =
+      payment_mode === "Cash"
+        ? (received_by || req.user?.user_id || null)
+        : null;
+
     const [result] = await pool.query(
       `INSERT INTO donations
-       (mandapam_id, event_id, donor_user_id, donor_name, amount, payment_mode,
+       (mandapam_id, event_id, donor_user_id, donor_name, donor_mobile, amount, payment_mode,
         transaction_ref, donation_date, received_by, status, approved_by, remarks)
-       VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?, 'pending', NULL, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, 'pending', NULL, ?)`,
       [
         mandapam_id,
         event_id,
         donor_user_id,
         donor_name,
+        donor_mobile,
         amount,
         payment_mode,
         transaction_ref,
-        received_by || req.user?.user_id || null,
+        receivedByUserId,
         remarks,
       ]
     );
@@ -68,6 +77,7 @@ export const listDonations = async (req, res) => {
         d.event_id,
         d.donor_user_id,
         d.donor_name,
+        d.donor_mobile,
         d.amount,
         d.payment_mode,
         d.transaction_ref,
@@ -75,7 +85,7 @@ export const listDonations = async (req, res) => {
         d.status,
         d.remarks,
         m.mandapam_name,
-        m.qr AS mandapam_qr         -- ✅ fetch mandapam QR
+        m.qr AS mandapam_qr
       FROM donations d
       LEFT JOIN mandapam m ON d.mandapam_id = m.mandapam_id
       WHERE 1=1
