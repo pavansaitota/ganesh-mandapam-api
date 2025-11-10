@@ -86,7 +86,7 @@ export const registerUser = async (req, res) => {
 };
 
 /* ===========================================================
-   2️⃣ Login
+   2️⃣ Login (UPDATED - returns roles)
    =========================================================== */
 export const loginUser = async (req, res) => {
   const { mobile_no, password } = req.body;
@@ -100,11 +100,21 @@ export const loginUser = async (req, res) => {
     const valid = bcrypt.compareSync(password, user.password_hash);
     if (!valid) return res.status(401).json({ message: "Invalid credentials" });
 
+    // ✅ fetch roles for this user
+    const [roleRows] = await pool.query(
+      `SELECT ur.mandapam_id, r.role_id, r.role_name 
+       FROM user_roles ur 
+       JOIN roles r ON r.role_id = ur.role_id
+       WHERE ur.user_id = ? AND ur.status='active'`,
+      [user.user_id]
+    );
+
     const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
 
     console.log("✅ Login success for:", user.user_id);
+    console.log("🎭 Roles:", roleRows);
 
     res.json({
       message: "Login successful",
@@ -115,6 +125,7 @@ export const loginUser = async (req, res) => {
         mobile_no: user.mobile_no,
         email: user.email,
         mandapam_id: user.mandapam_id,
+        roles: roleRows  // ✅ now returning roles
       },
     });
   } catch (e) {
