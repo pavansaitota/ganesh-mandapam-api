@@ -1,19 +1,19 @@
 import express from "express";
 import {
   registerMandapam,
-  getNearbyMandapams,
-  getAllMandapams,
+  getMandapam,
+  getAllMandapams
 } from "../controllers/mandapamController.js";
 
 const router = express.Router();
 
-// ✅ Register new mandapam
+// register
 router.post("/", registerMandapam);
 
-// ✅ Get mandapams near location or by ID (fixed 0.5 km radius)
-router.get("/", getNearbyMandapams);
+// get by ID
+router.get("/:id", getMandapam);
 
-// ✅ Get all mandapams (optional, for admin)
-router.get("/all", getAllMandapams);
+// get all
+router.get("/", getAllMandapams);
 
 export default router;
